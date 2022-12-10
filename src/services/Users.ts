@@ -1,4 +1,6 @@
 import axios from "axios";
+import { atom, selector } from "recoil";
+import { capitalize } from "../Utils";
 
 export interface User {
     id: number,
@@ -16,5 +18,30 @@ export const getUsers: () => Promise<User[]> = async () => {
         'https://dummyjson.com/users',
     );
 
-    return result?.data?.users || [];
+    return result?.data?.users?.map((user: User) => ({
+        id: user.id,
+        firsName: user.firstName,
+        lastName: user.lastName,
+        gender: user.gender,
+        height: user.height,
+        weight: user.weight,
+        email: user.email,
+        age: user.age,
+    })) || [];
 }
+
+export const usersState = atom<User[]>({
+    key: 'usersState',
+    default: [],
+});
+
+export const userPropsState = selector({
+    key: 'userPropsState',
+    get: ({get}) => {
+        const users = get(usersState);
+        return  Object.keys(users[0]).map(key => ({
+            value: key, 
+            capitalize: capitalize(key),
+        }));
+    },
+  });
