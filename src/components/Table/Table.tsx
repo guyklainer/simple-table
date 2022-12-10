@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
-import { getUsers } from '../../services/Users';
+import { getUsers, usersState } from '../../services/Users';
 import { User } from '../../services/Users';
 import styled from "styled-components";
 import Header from './Header';
 import Body from './Body';
 import Footer from './Footer';
 import { useRecoilState } from 'recoil';
-import { usersState } from '../../services/Users';
 
 const Table = () => {
     
@@ -25,15 +24,15 @@ const Table = () => {
         return <div>Empty</div>;
     };
 
-    return <Container>
+    return <Container className='table'>
         <Header />
         <Body />
         <Footer />
     </Container>;
 }
 
-const Container = styled.div`
-    font-size: 12px;
+const Container = styled.table`
+    font-size: 14px;
     width: 800px;
     margin: 20px auto;
 `;

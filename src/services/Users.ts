@@ -20,12 +20,12 @@ export const getUsers: () => Promise<User[]> = async () => {
 
     return result?.data?.users?.map((user: User) => ({
         id: user.id,
-        firsName: user.firstName,
+        firstName: user.firstName,
         lastName: user.lastName,
+        email: user.email,
         gender: user.gender,
         height: user.height,
         weight: user.weight,
-        email: user.email,
         age: user.age,
     })) || [];
 }
@@ -35,7 +35,7 @@ export const usersState = atom<User[]>({
     default: [],
 });
 
-export const userPropsState = selector({
+export const userKeysState = selector({
     key: 'userPropsState',
     get: ({get}) => {
         const users = get(usersState);

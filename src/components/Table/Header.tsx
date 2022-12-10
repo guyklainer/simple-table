@@ -1,18 +1,37 @@
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { userPropsState } from "../../services/Users";
+import { structureState } from "../../services/Structure";
+import { User, userKeysState } from "../../services/Users";
 
 const Header = () => {
-    const keys = useRecoilValue(userPropsState);
+    const keys = useRecoilValue(userKeysState);
+    const [structure, setStructure] = useRecoilState(structureState);
     
+    const changeOrder = (key: string) => {
+        const newState = {...structure};
+        if (structure.orderBy === key) {
+            newState.orderDirection = structure.orderDirection === 'DESC' ? 'ASC' : 'DESC';
+        } else {
+            newState.orderDirection = 'ASC';
+            newState.orderBy = key as keyof User;
+        }
+
+        setStructure(newState);
+    };
+
     return <Container>
-        {keys.map(key => <div key={key.value} className="th">{key.capitalize}</div>)}    
+        <tr>
+            {keys.map(key => 
+                <th key={key.value} onClick={() => changeOrder(key.value)}>{key.capitalize}</th>
+            )}    
+        </tr>
     </Container>;
 };
 
-const Container = styled.div`
-    display: flex;
-    justify-content: space-between;
+const Container = styled.thead`
+    th {
+        cursor: pointer;
+    }
 `;
 
 export default Header;
