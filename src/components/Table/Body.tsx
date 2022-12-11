@@ -1,13 +1,13 @@
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { usersStructuredState } from "../../services/Structure";
+import { dataStructuredState } from "../../services/selectors";
 import Row from "./Row";
 
 const Body = () => {
-    const users = useRecoilValue(usersStructuredState);
+    const data = useRecoilValue(dataStructuredState);
     
     return <Container>
-        {users.map(user => <Row key={user.id} user={user} />)}
+        {data.map(entity => <Row key={entity.name} entity={entity} />)}
     </Container>;
 };
 

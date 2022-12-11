@@ -1,10 +1,11 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { structureState } from "../../services/Structure";
-import { User, userKeysState } from "../../services/Users";
+import { structureState, Entity } from "../../services/atoms";
+import { dataKeysState } from "../../services/selectors";
+import { Caret } from "./Caret";
 
 const Header = () => {
-    const keys = useRecoilValue(userKeysState);
+    const keys = useRecoilValue(dataKeysState);
     const [structure, setStructure] = useRecoilState(structureState);
     
     const changeOrder = (key: string) => {
@@ -13,7 +14,7 @@ const Header = () => {
             newState.orderDirection = structure.orderDirection === 'DESC' ? 'ASC' : 'DESC';
         } else {
             newState.orderDirection = 'ASC';
-            newState.orderBy = key as keyof User;
+            newState.orderBy = key as keyof Entity;
         }
 
         setStructure(newState);
@@ -21,8 +22,13 @@ const Header = () => {
 
     return <Container>
         <tr>
-            {keys.map(key => 
-                <th key={key.value} onClick={() => changeOrder(key.value)}>{key.capitalize}</th>
+            <td></td>
+            {keys.filter(key => key.value !== 'logo').map(key => 
+                <th key={key.value} onClick={() => changeOrder(key.value)}>
+                    {key.capitalize}&nbsp;
+                    {structure.orderBy === key.value && <Caret direction={structure.orderDirection}/>}
+                    
+                </th>
             )}    
         </tr>
     </Container>;

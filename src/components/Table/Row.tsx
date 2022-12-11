@@ -1,16 +1,28 @@
 import { useRecoilValue } from "recoil";
-import { User, userKeysState } from "../../services/Users";
+import styled from "styled-components";
+import { Entity } from "../../services/atoms";
+import { dataKeysState } from "../../services/selectors";
 
 interface RowProps {
-    user: User;
+    entity: Entity;
 }
 
-const Row = ({user}: RowProps) => {
-    const keys = useRecoilValue(userKeysState).map(key => key.value) as (keyof User)[];
+const Row = ({entity}: RowProps) => {
+    const keys = useRecoilValue(dataKeysState)
+        .map(key => key.value)
+        .filter(key => key !== 'logo') as (keyof Entity)[];
     
-    return <tr>
-        {keys.map(key => <td key={key}>{user[key]}</td>)}
-    </tr>;
+    return <Container>
+        <td><img src={entity.logo} /></td>
+        {keys.map(key => <td key={key}>{entity[key]}</td>)}
+    </Container>;
 }
+
+const Container = styled.tr`
+    img {
+        width: 30px;
+        height: 30px;
+    }
+`;
 
 export default Row;

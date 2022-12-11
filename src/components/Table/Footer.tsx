@@ -1,13 +1,13 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { structureState } from "../../services/Structure";
-import { usersState } from "../../services/Users";
+import { filteredDataState } from "../../services/selectors";
 import classnames from "classnames";
+import { structureState } from "../../services/atoms";
 
 const Footer = () => {
     const [structure, setStructure] = useRecoilState(structureState);
-    const [users] = useRecoilState(usersState);
-    const pageLinks = Math.ceil(users.length / structure.pageSize);
+    const data = useRecoilValue(filteredDataState);
+    const pageLinks = Math.ceil(data.length / structure.pageSize);
 
     const limitChange = (e: any) => {
         setStructure({...structure, pageSize: parseInt(e?.target?.value), currentPage: 0})
@@ -20,6 +20,13 @@ const Footer = () => {
     }
     
     return <Container>
+        <select onChange={limitChange} className="form-select">
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={30}>30</option>
+            <option value={40}>40</option>
+            <option value={50}>50</option>
+        </select>
         <ul className="pagination">
             <li onClick={() => pageChange(structure.currentPage-1)} 
                 className="page-item">
@@ -27,7 +34,7 @@ const Footer = () => {
             </li>
             
             {Array(pageLinks).fill(null).map((_, i) => 
-                <li onClick={() => pageChange(i)} className="page-item">
+                <li key={i} onClick={() => pageChange(i)} className="page-item">
                     <a className={classnames({'active': structure.currentPage === i}, "page-link")}>{i+1}</a>
                 </li>
             )}
@@ -37,20 +44,14 @@ const Footer = () => {
                     <a className="page-link">Next</a>
             </li>
         </ul>
-
-        <select onChange={limitChange} className="form-select">
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={30}>30</option>
-            <option value={40}>40</option>
-            <option value={50}>50</option>
-        </select>
   </Container>;
 };
 
-const Container = styled.tfoot`
+const Container = styled.div`
+    width: 1000px;
     display: flex;
     padding: 15px 0;
+    justify-content: space-between;
 
     a {
         cursor: pointer;
